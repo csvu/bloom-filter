@@ -27,3 +27,12 @@ bool isPossiblyMember(BloomFilter* bloom_filter, const std::string& key) {
     }
     return true;
 }
+
+void inputByFile(BloomFilter* bloom_filter, const std::string& file_name) {
+    std::ifstream inp(file_name);
+    std::string temp;
+    while (inp >> temp) {
+        insertMember(bloom_filter, temp);
+    }
+    inp.close();
+}

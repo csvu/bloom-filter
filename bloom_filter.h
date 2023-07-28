@@ -23,3 +23,5 @@ void destroyBloomFilter(BloomFilter* bloom_filter);
 void insertMember(BloomFilter* bloom_filter, const std::string& key);
 
 bool isPossiblyMember(BloomFilter* bloom_filter, const std::string& key);
+
+void inputByFile(BloomFilter* bloom_filter, const std::string& file_name);
