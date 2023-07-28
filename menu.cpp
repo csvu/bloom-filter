@@ -55,9 +55,9 @@ bool isValidPassword(const std::string& password, const std::string& username, c
     return true;
 }
 
-bool isValidAccount(const std::string& username, const std::string& password,const std::vector<std::string>& existingUsernames,const std::vector<std::string>& weakPasswords) {
+bool isValidAccount(const std::string& username, const std::string& password, const std::vector<std::string>& existingUsernames, const std::vector<std::string>& weakPasswords) {
 
-    if (!isValidUsername(username, existingUsernames, weakPasswords)) {
+    if (!isValidUsername(password, username, weakPasswords)) {
         return false;
     }
 
