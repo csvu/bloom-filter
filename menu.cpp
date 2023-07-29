@@ -184,9 +184,9 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
     while (!loop_out) {
         std::string username, password;
         std::cout << "Username: ";
-        std::cin >> username;
+        std::getline(std::cin, username);
         std::cout << "Password: ";
-        std::cin >> password;
+        std::getline(std::cin, password);
 
         // Sure that username is not a member
         if (!isPossiblyMember(username_check, username)) {
@@ -228,7 +228,13 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
     while (!loop_out) {
         std::string new_password;
         std::cout << "New password: ";
-        std::cin >> new_password;
+        std::getline(std::cin, new_password);
+
+        if (!isValidPassword(username, new_password)) {
+            std::cout << "Your password is invalid. Please type another password" << std::endl;
+            continuePrompt(loop_out);
+            continue;
+        }
 
         if (isPossiblyMember(weak_password_check, new_password)) {
             std::cout << "Your password might be insecure. Please type another password"
