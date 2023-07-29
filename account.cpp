@@ -1,4 +1,5 @@
 #include "account.h"
+#include <algorithm>
 
 bool isValidUsername(const std::string& password, const std::string& username,
                      const std::vector<std::string>& weakPasswords) {
@@ -68,4 +69,13 @@ bool isValidAccount(const std::string& username, const std::string& password,
     }
 
     return true;
+}
+
+
+bool isUsernameRegistered(const std::string& username, const std::vector<std::string>& existingUsernames) {
+    return std::find(existingUsernames.begin(), existingUsernames.end(), username) != existingUsernames.end();
+}
+
+bool isWeakPassword(const std::string& password, const std::vector<std::string>& weakPasswords) {
+    return std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end();
 }

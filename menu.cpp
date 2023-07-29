@@ -1,4 +1,47 @@
 #include "menu.h"
+#include <fstream>
+#include <sstream>
+
+
+bool signUpAccount(const std::string& username, const std::string& password, const std::vector<std::string>& existingUsernames, const std::vector<std::string>& weakPasswords, std::ofstream& failFile) {
+    if (!isValidUsername(password, username, weakPasswords)) {
+        failFile << username << " " << password << " - Invalid Username" << std::endl;
+        return false;
+    }
+
+    if (!isValidPassword(password, username, weakPasswords)) {
+        failFile << username << " " << password << " - Invalid Password" << std::endl;
+        return false;
+    }
+
+    if (isUsernameRegistered(username, existingUsernames)) {
+        failFile << username << " " << password << " - Username already registered" << std::endl;
+        return false;
+    }
+
+    saveAccountToDatabase(username, password);
+    return true;
+}
+
+void readExistingUsernames(std::vector<std::string>& existingUsernames) {
+    std::ifstream file("SignUp.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error: Failed to open file SignUp.txt" << std::endl;
+        return;
+    }
+
+    existingUsernames.clear();
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string username;
+        iss >> username;
+        existingUsernames.push_back(username);
+    }
+
+    file.close();
+}
 
 void saveAccountToDatabase(const std::string& username, const std::string& password) {
     std::ofstream outFile("Sign Up.txt", std::ios_base::app);
@@ -6,10 +49,34 @@ void saveAccountToDatabase(const std::string& username, const std::string& passw
     outFile.close();
 }
 
-void signUpMultipleAccounts(BloomFilter* bloom_filter) {
+void readWeakPasswords(std::vector<std::string>& weakPasswords) {
+    std::ifstream file("Weak-Pass.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error: Failed to open file Weak-Pass.txt" << std::endl;
+        return;
+    }
+
+    weakPasswords.clear(); 
+
+    std::string password;
+    while (file >> password) {
+        weakPasswords.push_back(password);
+    }
+
+    file.close();
+}
+
+
+void signUpMultipleAccounts(BloomFilter* username_check) {
     int numAccounts;
     std::cout << "Enter the number of accounts you want to sign up: ";
     std::cin >> numAccounts;
+
+    std::vector<std::string> existingUsernames;
+    readExistingUsernames(existingUsernames);
+
+    std::vector<std::string> weakPasswords;
+    readWeakPasswords(weakPasswords);
 
     std::ofstream failFile("Fail.txt");
     for (int i = 0; i < numAccounts; i++) {
@@ -20,16 +87,18 @@ void signUpMultipleAccounts(BloomFilter* bloom_filter) {
         std::cout << "Enter password: ";
         std::cin >> password;
 
-        if (isPossiblyMember(bloom_filter, username)) {
-            failFile << username << " " << password << std::endl;
+        if (isPossiblyMember(username_check, username)) {
+            failFile << username << " " << password << " - Username possibly exists" << std::endl;
         } else {
-            insertMember(bloom_filter, username);
-            saveAccountToDatabase(username, password);
-            std::cout << "Account registered successfully!" << std::endl;
+            insertMember(username_check, username);
+            if (signUpAccount(username, password, existingUsernames, weakPasswords, failFile)) {
+                std::cout << "Account registered successfully!" << std::endl;
+            }
         }
     }
     failFile.close();
 }
+
 
 void primeMenu() {
     BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
