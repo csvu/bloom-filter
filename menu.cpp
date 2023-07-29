@@ -1,104 +1,112 @@
 #include "menu.h"
+
 #include <fstream>
 #include <sstream>
 
+void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_check) {
+    Account account;
 
-bool signUpAccount(const std::string& username, const std::string& password, const std::vector<std::string>& existingUsernames, const std::vector<std::string>& weakPasswords, std::ofstream& failFile) {
-    if (!isValidUsername(password, username, weakPasswords)) {
-        failFile << username << " " << password << " - Invalid Username" << std::endl;
-        return false;
+    bool loop = false;
+    bool valid = false;
+
+    while (!loop) {
+        std::cout << " Username : ";
+        std::cin >> account.username;
+        std::cout << " Password : ";
+        std::cin >> account.password;
+
+        if (!isValidUsername(account.username)) {
+            std::cout << "-> Invalid Username" << std::endl;
+            continuePrompt(loop);
+            continue;
+        }
+
+        if (!isValidPassword(account.username, account.password)) {
+            std::cout << "-> Invalid Password" << std::endl;
+            continuePrompt(loop);
+            continue;
+        }
+
+        if (isPossiblyMember(username_check, account.username)) {
+            std::cout << "-> Username already registered" << std::endl;
+            continuePrompt(loop);
+            continue;
+        }
+
+        if (isPossiblyMember(weak_password_check, account.password)) {
+            std::cout << "-> Weak Password" << std::endl;
+            continuePrompt(loop);
+            continue;
+        }
+        valid = true;
+        loop = true;
     }
-
-    if (!isValidPassword(password, username, weakPasswords)) {
-        failFile << username << " " << password << " - Invalid Password" << std::endl;
-        return false;
-    }
-
-    if (isUsernameRegistered(username, existingUsernames)) {
-        failFile << username << " " << password << " - Username already registered" << std::endl;
-        return false;
-    }
-
-    saveAccountToDatabase(username, password);
-    return true;
+    if (valid) saveAccountToDatabase(account.username, account.password);
 }
 
-void readExistingUsernames(std::vector<std::string>& existingUsernames) {
-    std::ifstream file("SignUp.txt");
-    if (!file.is_open()) {
-        std::cerr << "Error: Failed to open file SignUp.txt" << std::endl;
+void signUpAccount(const std::string& username, const std::string& password,
+                   BloomFilter* username_check, BloomFilter* weak_password_check,
+                   std::ofstream& failFile) {
+    if (!isValidUsername(username)) {
+        std::cout << "-> Invalid Username" << std::endl;
+        failFile << username << " " << password << " - Invalid Username" << std::endl;
         return;
     }
 
-    existingUsernames.clear();
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::string username;
-        iss >> username;
-        existingUsernames.push_back(username);
+    if (!isValidPassword(username, password)) {
+        std::cout << "-> Invalid Password" << std::endl;
+        failFile << "[" << username << "]"
+                 << "-"
+                 << "[" << password << "]"
+                 << " - Invalid Password" << std::endl;
+        return;
     }
 
-    file.close();
+    if (isPossiblyMember(username_check, username)) {
+        std::cout << "-> Username already registered" << std::endl;
+        failFile << "[" << username << "]"
+                 << "-"
+                 << "[" << password << "]"
+                 << " - Username already registered" << std::endl;
+        return;
+    }
+
+    if (isPossiblyMember(weak_password_check, password)) {
+        std::cout << "-> Weak Password" << std::endl;
+        failFile << "[" << username << "]"
+                 << "-"
+                 << "[" << password << "]"
+                 << "- Weak Password" << std::endl;
+        return;
+    }
+
+    saveAccountToDatabase(username, password);
 }
 
 void saveAccountToDatabase(const std::string& username, const std::string& password) {
-    std::ofstream outFile("Sign Up.txt", std::ios_base::app);
+    std::ofstream outFile("SignUp.txt", std::ios_base::app);
     outFile << username << " " << password << std::endl;
     outFile.close();
 }
 
-void readWeakPasswords(std::vector<std::string>& weakPasswords) {
-    std::ifstream file("Weak-Pass.txt");
-    if (!file.is_open()) {
-        std::cerr << "Error: Failed to open file Weak-Pass.txt" << std::endl;
-        return;
-    }
-
-    weakPasswords.clear(); 
-
-    std::string password;
-    while (file >> password) {
-        weakPasswords.push_back(password);
-    }
-
-    file.close();
-}
-
-
-void signUpMultipleAccounts(BloomFilter* username_check) {
+void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_password_check) {
     int numAccounts;
     std::cout << "Enter the number of accounts you want to sign up: ";
     std::cin >> numAccounts;
-
-    std::vector<std::string> existingUsernames;
-    readExistingUsernames(existingUsernames);
-
-    std::vector<std::string> weakPasswords;
-    readWeakPasswords(weakPasswords);
-
+    std::cin.ignore();
     std::ofstream failFile("Fail.txt");
     for (int i = 0; i < numAccounts; i++) {
         std::string username, password;
         std::cout << "\nAccount #" << (i + 1) << std::endl;
         std::cout << "Enter username: ";
-        std::cin >> username;
+        std::getline(std::cin, username);
         std::cout << "Enter password: ";
-        std::cin >> password;
+        std::getline(std::cin, password);
 
-        if (isPossiblyMember(username_check, username)) {
-            failFile << username << " " << password << " - Username possibly exists" << std::endl;
-        } else {
-            insertMember(username_check, username);
-            if (signUpAccount(username, password, existingUsernames, weakPasswords, failFile)) {
-                std::cout << "Account registered successfully!" << std::endl;
-            }
-        }
+        signUpAccount(username, password, username_check, weak_password_check, failFile);
     }
     failFile.close();
 }
-
 
 void primeMenu() {
     BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
@@ -115,29 +123,33 @@ void primeMenu() {
     bool loop_out = false;
     while (!loop_out) {
         std::cout << "Please choose an option" << std::endl;
-        std::cout << "1. Sign up" << std::endl;
-        std::cout << "2. Log in" << std::endl;
-        std::cout << "3. Change password" << std::endl;
-        std::cout << "4. Exit" << std::endl;
+        std::cout << "1. Sign up one account" << std::endl;
+        std::cout << "2. Sign up" << std::endl;
+        std::cout << "3. Log in" << std::endl;
+        std::cout << "4. Change password" << std::endl;
+        std::cout << "5. Exit" << std::endl;
 
         int choice = 0;
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                signUpMultipleAccounts(username_check);
+                signUpOneAccount(username_check, weak_password_check);
                 break;
             case 2:
-                logIn(account, is_logged_in, username_check);
+                signUpMultipleAccounts(username_check, weak_password_check);
                 break;
             case 3:
+                logIn(account, is_logged_in, username_check);
+                break;
+            case 4:
                 if (!is_logged_in) {
                     std::cout << "You must log in first" << std::endl;
                     break;
                 }
                 changePassword(account.username, weak_password_check);
                 break;
-            case 4:
+            case 5:
                 loop_out = true;
                 break;
             default:

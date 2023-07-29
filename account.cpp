@@ -1,8 +1,8 @@
 #include "account.h"
+
 #include <algorithm>
 
-bool isValidUsername(const std::string& password, const std::string& username,
-                     const std::vector<std::string>& weakPasswords) {
+bool isValidUsername(const std::string& username) {
     if (username.length() <= 5 || username.length() >= 10) {
         return false;
     }
@@ -11,14 +11,9 @@ bool isValidUsername(const std::string& password, const std::string& username,
         return false;
     }
 
-    if (std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end()) {
-        return false;
-    }
-
     return true;
 }
-bool isValidPassword(const std::string& password, const std::string& username,
-                     const std::vector<std::string>& weakPasswords) {
+bool isValidPassword(const std::string& username, const std::string& password) {
     if (password.length() <= 10 || password.length() >= 20) {
         return false;
     }
@@ -38,15 +33,11 @@ bool isValidPassword(const std::string& password, const std::string& username,
             hasLowercase = true;
         } else if (std::isdigit(c)) {
             hasDigit = true;
-        } else if (std::ispunct(c) || std::isspace(c)) {
+        } else if (!std::isalpha(c)) {
             hasSpecialChar = true;
         }
     }
     if (!(hasUppercase && hasLowercase && hasDigit && hasSpecialChar)) {
-        return false;
-    }
-
-    if (std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end()) {
         return false;
     }
 
@@ -55,27 +46,4 @@ bool isValidPassword(const std::string& password, const std::string& username,
     }
 
     return true;
-}
-
-bool isValidAccount(const std::string& username, const std::string& password,
-                    const std::vector<std::string>& existingUsernames,
-                    const std::vector<std::string>& weakPasswords) {
-    if (!isValidUsername(password, username, weakPasswords)) {
-        return false;
-    }
-
-    if (!isValidPassword(password, username, weakPasswords)) {
-        return false;
-    }
-
-    return true;
-}
-
-
-bool isUsernameRegistered(const std::string& username, const std::vector<std::string>& existingUsernames) {
-    return std::find(existingUsernames.begin(), existingUsernames.end(), username) != existingUsernames.end();
-}
-
-bool isWeakPassword(const std::string& password, const std::vector<std::string>& weakPasswords) {
-    return std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end();
 }
