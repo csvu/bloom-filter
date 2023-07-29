@@ -78,6 +78,8 @@ void primeMenu() {
                 break;
         }
     }
+    destroyBloomFilter(username_check);
+    destroyBloomFilter(weak_password_check);
 }
 
 void continuePrompt(bool& loop_out) {
