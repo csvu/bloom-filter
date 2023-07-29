@@ -1,4 +1,104 @@
 #include "menu.h"
+bool isValidUsername(const std::string& password, const std::string& username,
+                     const std::vector<std::string>& weakPasswords) {
+    if (username.length() <= 5 || username.length() >= 10) {
+        return false;
+    }
+
+    if (username.find(' ') != std::string::npos) {
+        return false;
+    }
+
+    if (std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end()) {
+        return false;
+    }
+
+    return true;
+}
+bool isValidPassword(const std::string& password, const std::string& username,
+                     const std::vector<std::string>& weakPasswords) {
+    if (password.length() <= 10 || password.length() >= 20) {
+        return false;
+    }
+
+    if (password.find(' ') != std::string::npos) {
+        return false;
+    }
+
+    bool hasUppercase = false;
+    bool hasLowercase = false;
+    bool hasDigit = false;
+    bool hasSpecialChar = false;
+    for (char c : password) {
+        if (std::isupper(c)) {
+            hasUppercase = true;
+        } else if (std::islower(c)) {
+            hasLowercase = true;
+        } else if (std::isdigit(c)) {
+            hasDigit = true;
+        } else if (std::ispunct(c) || std::isspace(c)) {
+            hasSpecialChar = true;
+        }
+    }
+    if (!(hasUppercase && hasLowercase && hasDigit && hasSpecialChar)) {
+        return false;
+    }
+
+    if (std::find(weakPasswords.begin(), weakPasswords.end(), password) != weakPasswords.end()) {
+        return false;
+    }
+
+    if (password == username) {
+        return false;
+    }
+
+    return true;
+}
+
+bool isValidAccount(const std::string& username, const std::string& password,
+                    const std::vector<std::string>& existingUsernames,
+                    const std::vector<std::string>& weakPasswords) {
+    if (!isValidUsername(password, username, weakPasswords)) {
+        return false;
+    }
+
+    if (!isValidPassword(password, username, weakPasswords)) {
+        return false;
+    }
+
+    return true;
+}
+
+void saveAccountToDatabase(const std::string& username, const std::string& password) {
+    std::ofstream outFile("Sign Up.txt", std::ios_base::app);
+    outFile << username << " " << password << std::endl;
+    outFile.close();
+}
+
+void signUpMultipleAccounts(BloomFilter* bloom_filter) {
+    int numAccounts;
+    std::cout << "Enter the number of accounts you want to sign up: ";
+    std::cin >> numAccounts;
+
+    std::ofstream failFile("Fail.txt");
+    for (int i = 0; i < numAccounts; i++) {
+        std::string username, password;
+        std::cout << "\nAccount #" << (i + 1) << std::endl;
+        std::cout << "Enter username: ";
+        std::cin >> username;
+        std::cout << "Enter password: ";
+        std::cin >> password;
+
+        if (isPossiblyMember(bloom_filter, username)) {
+            failFile << username << " " << password << std::endl;
+        } else {
+            insertMember(bloom_filter, username);
+            saveAccountToDatabase(username, password);
+            std::cout << "Account registered successfully!" << std::endl;
+        }
+    }
+    failFile.close();
+}
 
 void primeMenu() {
     BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
