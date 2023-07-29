@@ -11,7 +11,7 @@
 				"-g",
 				"${fileDirname}\\*.cpp",
 				"-o",
-				"${fileDirname}\\main.exe",
+				"${fileDirname}\\main.exe"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
@@ -22,7 +22,8 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"detail": "compiler: g++"
 		}
 	],
 	"version": "2.0.0"

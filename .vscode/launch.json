@@ -5,12 +5,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${fileDirname}\\main.exe",
-			"args": [
-				"-a",
-				"counting-sort",
-				"500000",
-				"-time"
-			],
+			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
 			"environment": [],

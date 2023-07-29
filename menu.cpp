@@ -110,7 +110,7 @@ void primeMenu() {
     bool is_logged_in = false;
     Account account;
 
-    std::cout << "Welcome to the password manager" << std::endl;
+    std::cout << "Welcome to the account manager" << std::endl;
 
     bool loop_out = false;
     while (!loop_out) {
@@ -246,6 +246,7 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
         }
 
         fst.close();
-        break;
+        std::cout << "Password changed successfully" << std::endl;
+        loop_out = true;
     }
 }
