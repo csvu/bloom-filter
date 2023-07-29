@@ -1,4 +1,3 @@
-#pragma once
 
 #include <algorithm>
 #include <fstream>
@@ -10,16 +9,11 @@
 
 void primeMenu();
 void continuePrompt(bool& loop_out);
-void signUp();
 void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check);
 void saveAccountToDatabase(const std::string& username, const std::string& password);
-bool isValidUsername(const std::string& password, const std::string& username,
-                     const std::vector<std::string>& weakPasswords);
-bool isValidPassword(const std::string& password, const std::string& username,
-                     const std::vector<std::string>& weakPasswords);
-bool isValidAccount(const std::string& username, const std::string& password,
-                    const std::vector<std::string>& existingUsernames,
-                    const std::vector<std::string>& weakPasswords);
-void saveAccountToDatabase(const std::string& username, const std::string& password);
-void signUpMultipleAccounts(BloomFilter* bloom_filter);
+void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_password_check);
 void changePassword(const std::string& username, BloomFilter* weak_password_check);
+void signUpAccount(const std::string& username, const std::string& password,
+                   BloomFilter* username_check, BloomFilter* weak_password_check,
+                   std::ofstream& failFile);
+void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_check);
