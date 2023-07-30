@@ -1,4 +1,4 @@
-
+#pragma once
 #include <string>
 
 unsigned int FNV1A(const std::string& key);
