@@ -189,6 +189,7 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
             continue;
         }
 
+        // Disk storage access
         std::ifstream inp("SignUp.txt");
         std::vector<Account> accounts;
         Account account;
@@ -200,6 +201,7 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
         }
         inp.close();
 
+        // Replace the old password with the new one
         std::ofstream out("SignUp.txt");
         for (const auto& acc : accounts) {
             if (acc.username == username) {
