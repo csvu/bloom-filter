@@ -161,7 +161,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
             continue;
         }
 
-        if (account.password == password) {
+        if (temp.password == password) {
             std::cout << "Login successfully!" << std::endl;
             is_logged_in = true;
             account = temp;

@@ -1,0 +1,6 @@
+aowiehgwog AB##AbcBAc1 - Invalid Username
+[cccccc]-[Ab##a133Ac] - Invalid Password
+[cccccc]-[Abc#abc#a1] - Invalid Password
+ccccc 3Ab#ab1cce - Invalid Username
+[cccccc]-[3A#ab1cce] - Invalid Password
+[aaaabce]-[3Ab#ab1ccee] - Username already registered
