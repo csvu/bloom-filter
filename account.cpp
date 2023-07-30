@@ -13,6 +13,7 @@ bool isValidUsername(const std::string& username) {
 
     return true;
 }
+
 bool isValidPassword(const std::string& username, const std::string& password) {
     if (password.length() <= 10 || password.length() >= 20) {
         return false;
