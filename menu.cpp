@@ -146,8 +146,9 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
         // Not sure that username is a member, continue to check
         std::ifstream inp("SignUp.txt");
         bool is_member = false;
-        while (inp >> account.username >> account.password) {
-            if (account.username == username) {
+        Account temp;
+        while (inp >> temp.username >> temp.password) {
+            if (temp.username == username) {
                 is_member = true;
                 break;
             }
@@ -163,6 +164,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
         if (account.password == password) {
             std::cout << "Login successfully!" << std::endl;
             is_logged_in = true;
+            account = temp;
             break;
         } else {
             std::cout << "Wrong username or password!" << std::endl;
