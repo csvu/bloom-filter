@@ -41,7 +41,7 @@ void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_ch
         valid = true;
         loop = true;
     }
-    if (valid) saveAccountToDatabase(account.username, account.password);
+    if (valid) saveAccountToDatabase(username_check, account.username, account.password);
 }
 
 void signUpAccount(const std::string& username, const std::string& password,
@@ -80,10 +80,11 @@ void signUpAccount(const std::string& username, const std::string& password,
         return;
     }
 
-    saveAccountToDatabase(username, password);
+    saveAccountToDatabase(username_check, username, password);
 }
 
-void saveAccountToDatabase(const std::string& username, const std::string& password) {
+void saveAccountToDatabase(BloomFilter* username_check, const std::string& username,
+                           const std::string& password) {
     insertMember(username_check, username);
     std::ofstream outFile("SignUp.txt", std::ios_base::app);
     outFile << username << " " << password << std::endl;
