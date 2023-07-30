@@ -28,11 +28,22 @@ bool isPossiblyMember(BloomFilter* bloom_filter, const std::string& key) {
     return true;
 }
 
-void inputByFile(BloomFilter* bloom_filter, const std::string& file_name) {
+void inputByFileUsername(BloomFilter* username_check, const std::string& file_name) {
     std::ifstream inp(file_name);
     std::string temp;
     while (inp >> temp) {
-        insertMember(bloom_filter, temp);
+        inp >> temp;
+        inp.ignore();
+        insertMember(username_check, temp);
+    }
+    inp.close();
+}
+
+void inputByFileWeakPassword(BloomFilter* weak_password_check, const std::string& file_name) {
+    std::ifstream inp(file_name);
+    std::string temp;
+    while (inp >> temp) {
+        insertMember(weak_password_check, temp);
     }
     inp.close();
 }
