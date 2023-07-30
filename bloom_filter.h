@@ -6,7 +6,7 @@
 
 #include "hash_functions.h"
 
-const int FILTER_SIZE = 40000;
+const int FILTER_SIZE = 184664;
 const int HASH_COUNT = 8;
 
 struct BloomFilter {

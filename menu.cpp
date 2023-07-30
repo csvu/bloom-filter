@@ -122,15 +122,23 @@ void primeMenu() {
 
     bool loop_out = false;
     while (!loop_out) {
+        std::cout << "========================================" << std::endl;
+        if (!is_logged_in) {
+            std::cout << "<You are not logged in>" << std::endl;
+        } else {
+            std::cout << "<You are logged in as " << account.username << ">" << std::endl;
+        }
         std::cout << "Please choose an option" << std::endl;
         std::cout << "1. Sign up one account" << std::endl;
         std::cout << "2. Sign up" << std::endl;
         std::cout << "3. Log in" << std::endl;
         std::cout << "4. Change password" << std::endl;
         std::cout << "5. Exit" << std::endl;
-
+        std::cout << "========================================" << std::endl;
+        std::cout << "Enter your choice: ";
         int choice = 0;
         std::cin >> choice;
+        std::cin.ignore();
 
         switch (choice) {
             case 1:
@@ -144,7 +152,7 @@ void primeMenu() {
                 break;
             case 4:
                 if (!is_logged_in) {
-                    std::cout << "You must log in first" << std::endl;
+                    std::cout << "You must log in first!" << std::endl;
                     break;
                 }
                 changePassword(account.username, weak_password_check);
@@ -153,7 +161,7 @@ void primeMenu() {
                 loop_out = true;
                 break;
             default:
-                std::cout << "Invalid input" << std::endl;
+                std::cout << "Invalid input!" << std::endl;
                 std::cin.clear();
                 std::cin.ignore(10000, '\n');
                 break;
@@ -168,11 +176,12 @@ void continuePrompt(bool& loop_out) {
         std::cout << "Do you want to continue? (y/n): ";
         char choice = '\0';
         std::cin >> choice;
+        std::cin.ignore();
         if (choice == 'n') {
             loop_out = true;
             break;
         } else if (choice != 'y') {
-            std::cout << "Invalid input" << std::endl;
+            std::cout << "Invalid input!" << std::endl;
             continue;
         } else
             break;
@@ -190,7 +199,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
 
         // Sure that username is not a member
         if (!isPossiblyMember(username_check, username)) {
-            std::cout << "Wrong username or password" << std::endl;
+            std::cout << "Wrong username or password!" << std::endl;
             continuePrompt(loop_out);
             continue;
         }
@@ -207,17 +216,17 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
         inp.close();
 
         if (!is_member) {
-            std::cout << "Wrong username or password" << std::endl;
+            std::cout << "Wrong username or password!" << std::endl;
             continuePrompt(loop_out);
             continue;
         }
 
         if (account.password == password) {
-            std::cout << "Login successful" << std::endl;
+            std::cout << "Login successfully!" << std::endl;
             is_logged_in = true;
             break;
         } else {
-            std::cout << "Wrong username or password" << std::endl;
+            std::cout << "Wrong username or password!" << std::endl;
             continuePrompt(loop_out);
         }
     }
