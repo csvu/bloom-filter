@@ -84,6 +84,7 @@ void signUpAccount(const std::string& username, const std::string& password,
 }
 
 void saveAccountToDatabase(const std::string& username, const std::string& password) {
+    insertMember(username_check, username);
     std::ofstream outFile("SignUp.txt", std::ios_base::app);
     outFile << username << " " << password << std::endl;
     outFile.close();
