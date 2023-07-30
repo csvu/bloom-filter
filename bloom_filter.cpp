@@ -30,11 +30,11 @@ bool isPossiblyMember(BloomFilter* bloom_filter, const std::string& key) {
 
 void inputByFileUsername(BloomFilter* username_check, const std::string& file_name) {
     std::ifstream inp(file_name);
-    std::string temp;
-    while (inp >> temp) {
-        inp >> temp;
+    Account account;
+    while (inp >> account.username) {
+        inp >> account.password;
         inp.ignore();
-        insertMember(username_check, temp);
+        insertMember(username_check, account.username);
     }
     inp.close();
 }

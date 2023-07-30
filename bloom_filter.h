@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "account.h"
 #include "hash_functions.h"
 
 const int FILTER_SIZE = 201978;
@@ -23,6 +24,6 @@ void insertMember(BloomFilter* bloom_filter, const std::string& key);
 
 bool isPossiblyMember(BloomFilter* bloom_filter, const std::string& key);
 
-void inputByFileUsername(BloomFilter* bloom_filter, const std::string& file_name);
+void inputByFileUsername(BloomFilter* username_check, const std::string& file_name);
 
-void inputByFileWeakPassword(BloomFilter* bloom_filter, const std::string& file_name);
+void inputByFileWeakPassword(BloomFilter* weak_password_check, const std::string& file_name);
