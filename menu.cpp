@@ -11,9 +11,9 @@ void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_ch
 
     while (!loop) {
         std::cout << " Username : ";
-        std::cin >> account.username;
+        std::getline(cin, account.username);
         std::cout << " Password : ";
-        std::cin >> account.password;
+        std::getline(cin, account.password);
 
         if (!isValidUsername(account.username)) {
             std::cout << "-> Invalid Username" << std::endl;
@@ -49,7 +49,10 @@ void signUpAccount(const std::string& username, const std::string& password,
                    std::ofstream& failFile) {
     if (!isValidUsername(username)) {
         std::cout << "-> Invalid Username" << std::endl;
-        failFile << username << " " << password << " - Invalid Username" << std::endl;
+        failFile << "[" << username << "]"
+                 << "-"
+                 << "[" << password << "]"
+                 << " - Invalid Username" << std::endl;
         return;
     }
 
