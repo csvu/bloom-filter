@@ -10,9 +10,9 @@ void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_ch
     bool valid = false;
 
     while (!loop) {
-        std::cout << " Username : ";
+        std::cout << "Username : ";
         std::cin >> account.username;
-        std::cout << " Password : ";
+        std::cout << "Password : ";
         std::cin >> account.password;
 
         if (!isValidUsername(account.username)) {
@@ -198,9 +198,7 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
         std::vector<Account> accounts;
         Account account;
 
-        while (inp >> account.username) {
-            inp >> account.password;
-            inp.ignore();
+        while (inp >> account.username >> account.password) {
             accounts.push_back(account);
         }
         inp.close();
@@ -243,7 +241,7 @@ void primeMenu() {
         }
         std::cout << "Please choose an option" << std::endl;
         std::cout << "1. Sign up one account" << std::endl;
-        std::cout << "2. Sign up" << std::endl;
+        std::cout << "2. Sign up multiple accounts" << std::endl;
         std::cout << "3. Log in" << std::endl;
         std::cout << "4. Change password" << std::endl;
         std::cout << "5. Exit" << std::endl;
