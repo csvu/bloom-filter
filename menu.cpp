@@ -226,7 +226,7 @@ void primeMenu() {
     BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
     BloomFilter* weak_password_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
 
-    inputByFileUsername(username_check, "SignUp.txt");
+    inputByFileUsername(username_check, "data.txt");
     inputByFileWeakPassword(weak_password_check, "Weak-Pass.txt");
 
     bool is_logged_in = false;

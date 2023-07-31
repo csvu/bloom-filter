@@ -3,8 +3,8 @@
 #include <vector>
 
 struct Account {
-    std::string username;
-    std::string password;
+    char username[9]{};
+    char password[19]{};
 };
 
 bool isValidUsername(const std::string& username);
