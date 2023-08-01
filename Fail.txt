@@ -8,4 +8,4 @@ abcefgik ss#SSs#1111 - Username already registered
 cccece accccEc1$22# - Username already registered
 acccEff Ab#efc3EgeF3eg - Username already registered
 lcccEff Bb#efc3EgeF3eg - Username already registered
-abc dac dad -Wrong username or password!
+abc dac dad - Wrong username or password!

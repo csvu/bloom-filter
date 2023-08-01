@@ -45,25 +45,21 @@ void signUpAccount(const std::string& username, const std::string& password,
                    BloomFilter* username_check, BloomFilter* weak_password_check,
                    std::ofstream& failFile) {
     if (!isValidUsername(username)) {
-        std::cout << "-> Invalid Username" << std::endl;
         failFile << username << " " << password << " - Invalid Username" << std::endl;
         return;
     }
 
     if (!isValidPassword(username, password)) {
-        std::cout << "-> Invalid Password" << std::endl;
         failFile << username << " " << password << " - Invalid Password" << std::endl;
         return;
     }
 
     if (isPossiblyMember(username_check, username)) {
-        std::cout << "-> Username already registered" << std::endl;
         failFile << username << " " << password << " - Username already registered" << std::endl;
         return;
     }
 
     if (isPossiblyMember(weak_password_check, password)) {
-        std::cout << "-> Weak Password" << std::endl;
         failFile << username << " " << password << "- Weak Password" << std::endl;
         return;
     }
