@@ -1,5 +1,72 @@
 #include "menu.h"
 
+void primeMenu() {
+    BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
+    BloomFilter* weak_password_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
+
+    inputByFileUsername(username_check, "data.txt");
+    inputByFileWeakPassword(weak_password_check, "Weak-Pass.txt");
+
+    bool is_logged_in = false;
+    Account account;
+
+    std::cout << "Welcome to the account manager" << std::endl;
+
+    bool loop_out = false;
+    while (!loop_out) {
+        std::cout << "========================================" << std::endl;
+        if (!is_logged_in) {
+            std::cout << "<You are not logged in>" << std::endl;
+        } else {
+            std::cout << "<You are logged in as " << account.username << ">" << std::endl;
+        }
+        std::cout << "Please choose an option" << std::endl;
+        std::cout << "1. Sign up one account" << std::endl;
+        std::cout << "2. Sign up multiple accounts" << std::endl;
+        std::cout << "3. Log in" << std::endl;
+        std::cout << "4. Change password" << std::endl;
+        std::cout << "5. Exit" << std::endl;
+        std::cout << "========================================" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::string str_choice;
+        std::getline(std::cin, str_choice);
+        int choice = 0;
+        if (str_choice.size() != 1 || !std::isdigit(str_choice[0])) {
+            choice = -1;
+        } else {
+            choice = std::stoi(str_choice);
+        }
+
+        switch (choice) {
+            case 1:
+                signUpOneAccount(username_check, weak_password_check);
+                break;
+            case 2:
+                signUpMultipleAccounts(username_check, weak_password_check);
+                break;
+            case 3:
+                logIn(account, is_logged_in, username_check);
+                break;
+            case 4:
+                if (!is_logged_in) {
+                    std::cout << "You must log in first!" << std::endl;
+                    break;
+                }
+                changePassword(account.username, weak_password_check);
+                break;
+            case 5:
+                loop_out = true;
+                break;
+            default:
+                std::cout << "Invalid input!" << std::endl;
+                std::cin.clear();
+                break;
+        }
+    }
+    destroyBloomFilter(username_check);
+    destroyBloomFilter(weak_password_check);
+}
+
 void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_check) {
     Account account;
 
@@ -71,23 +138,6 @@ void signUpAccount(const std::string& username, const std::string& password,
     saveAccountToDatabase(username_check, username, password);
 }
 
-void saveAccountToDatabase(BloomFilter* username_check, const std::string& username,
-                           const std::string& password) {
-    insertMember(username_check, username);
-    std::ofstream outFile("data.txt", std::ios_base::app);
-    outFile << username << " " << password << std::endl;
-    outFile.close();
-}
-
-int countSpaces(const std::string& text) {
-    int spaceCount = 0;
-    for (char c : text) {
-        if (c == ' ') {
-            spaceCount++;
-        }
-    }
-    return spaceCount;
-}
 void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_password_check) {
     std::ofstream failFile("Fail.txt");
     std::ifstream signupFile("SignUp.txt");
@@ -110,23 +160,6 @@ void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_passw
     std::cout << "Sign up multiple accounts successfully!" << std::endl;
     failFile.close();
     signupFile.close();
-}
-
-void continuePrompt(bool& loop_out) {
-    while (true) {
-        std::cout << "Do you want to continue? (y/n): ";
-        std::string choice;
-        std::getline(std::cin, choice);
-        if (choice.size() != 1 || (choice[0] != 'y' && choice[0] != 'n')) {
-            std::cout << "Invalid input!" << std::endl;
-            continue;
-        } else if (choice[0] == 'n') {
-            loop_out = true;
-            break;
-        } else {
-            break;
-        }
-    }
 }
 
 void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
@@ -221,68 +254,38 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
     }
 }
 
-void primeMenu() {
-    BloomFilter* username_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
-    BloomFilter* weak_password_check = createBloomFilter(FILTER_SIZE, HASH_COUNT);
-
-    inputByFileUsername(username_check, "data.txt");
-    inputByFileWeakPassword(weak_password_check, "Weak-Pass.txt");
-
-    bool is_logged_in = false;
-    Account account;
-
-    std::cout << "Welcome to the account manager" << std::endl;
-
-    bool loop_out = false;
-    while (!loop_out) {
-        std::cout << "========================================" << std::endl;
-        if (!is_logged_in) {
-            std::cout << "<You are not logged in>" << std::endl;
+void continuePrompt(bool& loop_out) {
+    while (true) {
+        std::cout << "Do you want to continue? (y/n): ";
+        std::string choice;
+        std::getline(std::cin, choice);
+        if (choice.size() != 1 || (choice[0] != 'y' && choice[0] != 'n')) {
+            std::cout << "Invalid input!" << std::endl;
+            std::cin.clear();
+            continue;
+        } else if (choice[0] == 'n') {
+            loop_out = true;
+            break;
         } else {
-            std::cout << "<You are logged in as " << account.username << ">" << std::endl;
-        }
-        std::cout << "Please choose an option" << std::endl;
-        std::cout << "1. Sign up one account" << std::endl;
-        std::cout << "2. Sign up multiple accounts" << std::endl;
-        std::cout << "3. Log in" << std::endl;
-        std::cout << "4. Change password" << std::endl;
-        std::cout << "5. Exit" << std::endl;
-        std::cout << "========================================" << std::endl;
-        std::cout << "Enter your choice: ";
-        std::string str_choice;
-        std::getline(std::cin, str_choice);
-        int choice = 0;
-        if (str_choice.size() != 1 || !std::isdigit(str_choice[0])) {
-            choice = -1;
-        } else {
-            choice = std::stoi(str_choice);
-        }
-
-        switch (choice) {
-            case 1:
-                signUpOneAccount(username_check, weak_password_check);
-                break;
-            case 2:
-                signUpMultipleAccounts(username_check, weak_password_check);
-                break;
-            case 3:
-                logIn(account, is_logged_in, username_check);
-                break;
-            case 4:
-                if (!is_logged_in) {
-                    std::cout << "You must log in first!" << std::endl;
-                    break;
-                }
-                changePassword(account.username, weak_password_check);
-                break;
-            case 5:
-                loop_out = true;
-                break;
-            default:
-                std::cout << "Invalid input!" << std::endl;
-                break;
+            break;
         }
     }
-    destroyBloomFilter(username_check);
-    destroyBloomFilter(weak_password_check);
+}
+
+int countSpaces(const std::string& text) {
+    int spaceCount = 0;
+    for (char c : text) {
+        if (c == ' ') {
+            spaceCount++;
+        }
+    }
+    return spaceCount;
+}
+
+void saveAccountToDatabase(BloomFilter* username_check, const std::string& username,
+                           const std::string& password) {
+    insertMember(username_check, username);
+    std::ofstream outFile("data.txt", std::ios_base::app);
+    outFile << username << " " << password << std::endl;
+    outFile.close();
 }
