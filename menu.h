@@ -11,7 +11,9 @@
 
 void primeMenu();
 void continuePrompt(bool& loop_out);
-void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check);
+int countSpaces(const std::string& text); 
+void logIn(Account& account, bool& is_logged_in,
+                                                    BloomFilter* username_check);
 void saveAccountToDatabase(BloomFilter* username_check, const std::string& username,
                            const std::string& password);
 void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_password_check);

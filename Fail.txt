@@ -1,2 +1,11 @@
-abc cce# - Invalid Username
-[ccccE3ce#]-[abcE3fC333ac] - Invalid Password
+nguyenvu acccccccE1# - Username already registered
+pllapla s#bBc9#abc11 - Username already registered
+cccccc 3Ab#ab1ccee - Username already registered
+aaaabce 3Ab#ab1ccee - Username already registered
+abcefg AbCeacceEfc1# - Username already registered
+onceupon AC3A#d1ef33 - Username already registered
+abcefgik ss#SSs#1111 - Username already registered
+cccece accccEc1$22# - Username already registered
+acccEff Ab#efc3EgeF3eg - Username already registered
+lcccEff Bb#efc3EgeF3eg - Username already registered
+abc dac dad -Wrong username or password!
