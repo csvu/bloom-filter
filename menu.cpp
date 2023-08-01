@@ -115,17 +115,17 @@ void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_passw
 void continuePrompt(bool& loop_out) {
     while (true) {
         std::cout << "Do you want to continue? (y/n): ";
-        char choice = '\0';
-        std::cin >> choice;
-        std::cin.ignore();
-        if (choice == 'n') {
-            loop_out = true;
-            break;
-        } else if (choice != 'y') {
+        std::string choice;
+        std::getline(std::cin, choice);
+        if (choice.size() != 1 || (choice[0] != 'y' && choice[0] != 'n')) {
             std::cout << "Invalid input!" << std::endl;
             continue;
-        } else
+        } else if (choice[0] == 'n') {
+            loop_out = true;
             break;
+        } else {
+            break;
+        }
     }
 }
 
@@ -249,9 +249,14 @@ void primeMenu() {
         std::cout << "5. Exit" << std::endl;
         std::cout << "========================================" << std::endl;
         std::cout << "Enter your choice: ";
+        std::string str_choice;
+        std::getline(std::cin, str_choice);
         int choice = 0;
-        std::cin >> choice;
-        std::cin.ignore();
+        if (str_choice.size() != 1 || !std::isdigit(str_choice[0])) {
+            choice = -1;
+        } else {
+            choice = std::stoi(str_choice);
+        }
 
         switch (choice) {
             case 1:
@@ -275,8 +280,6 @@ void primeMenu() {
                 break;
             default:
                 std::cout << "Invalid input!" << std::endl;
-                std::cin.clear();
-                std::cin.ignore(10000, '\n');
                 break;
         }
     }

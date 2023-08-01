@@ -70,3 +70,4 @@ user69 Password!123456 - Username already registered
 user70 SecureP@ss!890 - Username already registered
 user71 Exciting!12345 - Username already registered
 user72 Random@P - Invalid Password
+user73 sss#SSs#1111- Weak Password
