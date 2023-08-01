@@ -13,32 +13,36 @@ void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_ch
         std::getline(std::cin, account.password);
 
         if (!isValidUsername(account.username)) {
-            std::cout << "-> Invalid Username" << std::endl;
+            std::cout << "Your username is invalid. Please type another username" << std::endl;
             continuePrompt(loop);
             continue;
         }
 
         if (!isValidPassword(account.username, account.password)) {
-            std::cout << "-> Invalid Password" << std::endl;
+            std::cout << "Your password is invalid. Please type another password" << std::endl;
             continuePrompt(loop);
             continue;
         }
 
         if (isPossiblyMember(username_check, account.username)) {
-            std::cout << "-> Username already registered" << std::endl;
+            std::cout << "Username already registered. Please type another username" << std::endl;
             continuePrompt(loop);
             continue;
         }
 
         if (isPossiblyMember(weak_password_check, account.password)) {
-            std::cout << "-> Weak Password" << std::endl;
+            std::cout << "Your password might be insecure. Please type another password"
+                      << std::endl;
             continuePrompt(loop);
             continue;
         }
         valid = true;
         loop = true;
     }
-    if (valid) saveAccountToDatabase(username_check, account.username, account.password);
+    if (valid) {
+        std::cout << "Sign up successfully!" << std::endl;
+        saveAccountToDatabase(username_check, account.username, account.password);
+    }
 }
 
 void signUpAccount(const std::string& username, const std::string& password,
@@ -71,8 +75,7 @@ void saveAccountToDatabase(BloomFilter* username_check, const std::string& usern
                            const std::string& password) {
     insertMember(username_check, username);
     std::ofstream outFile("data.txt", std::ios_base::app);
-    outFile << std::left << std::setw(9) << std::setfill(' ') << username << " " << std::setw(19)
-            << std::setfill(' ') << password << std::endl;
+    outFile << username << " " << password << std::endl;
     outFile.close();
 }
 
@@ -104,6 +107,7 @@ void signUpMultipleAccounts(BloomFilter* username_check, BloomFilter* weak_passw
             signUpAccount(username, password, username_check, weak_password_check, failFile);
         }
     }
+    std::cout << "Sign up multiple accounts successfully!" << std::endl;
     failFile.close();
     signupFile.close();
 }
@@ -136,7 +140,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
 
         // Sure that username is not a member
         if (!isPossiblyMember(username_check, username)) {
-            std::cout << "Wrong username or password!" << std::endl;
+            std::cout << "Wrong username!" << std::endl;
             continuePrompt(loop_out);
             continue;
         }
@@ -154,7 +158,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
         inp.close();
 
         if (!is_member) {
-            std::cout << "Wrong username or password!" << std::endl;
+            std::cout << "Wrong username!" << std::endl;
             continuePrompt(loop_out);
             continue;
         }
@@ -165,7 +169,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
             account = temp;
             break;
         } else {
-            std::cout << "Wrong username or password!" << std::endl;
+            std::cout << "Wrong password!" << std::endl;
             continuePrompt(loop_out);
         }
     }
@@ -191,21 +195,26 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
             continue;
         }
 
-        // Disk storage access and replace the old password with the new one
-        std::fstream fst("data.txt");
+        // Disk storage access
+        std::ifstream inp("data.txt");
+        std::vector<Account> accounts;
         Account account;
 
-        while (fst >> account.username) {
-            if (account.username == username) {
-                fst.seekp(-10, std::ios::cur);
-                fst << std::left << std::setw(9) << std::setfill(' ') << username << " "
-                    << std::setw(19) << std::setfill(' ') << new_password << std::endl;
-                break;
+        while (inp >> account.username >> account.password) {
+            accounts.push_back(account);
+        }
+        inp.close();
+
+        // Replace the old password with the new one
+        std::ofstream out("data.txt");
+        for (const auto& acc : accounts) {
+            if (acc.username == username) {
+                out << acc.username << " " << new_password << "\n";
             } else {
-                fst >> account.password;
+                out << acc.username << " " << acc.password << "\n";
             }
         }
-        fst.close();
+        out.close();
 
         std::cout << "Password changed successfully" << std::endl;
         loop_out = true;

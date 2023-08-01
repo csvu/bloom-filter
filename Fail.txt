@@ -1,11 +1,72 @@
-nguyenvu acccccccE1# - Username already registered
-pllapla s#bBc9#abc11 - Username already registered
-cccccc 3Ab#ab1ccee - Username already registered
-aaaabce 3Ab#ab1ccee - Username already registered
-abcefg AbCeacceEfc1# - Username already registered
-onceupon AC3A#d1ef33 - Username already registered
-abcefgik ss#SSs#1111 - Username already registered
-cccece accccEc1$22# - Username already registered
-acccEff Ab#efc3EgeF3eg - Username already registered
-lcccEff Bb#efc3EgeF3eg - Username already registered
-abc dac dad - Wrong username or password!
+user1 Password@1 - Invalid Username
+user2 P@ssword123 - Invalid Username
+user3 SecurePassword!23 - Invalid Username
+user4 myP@ssword456 - Invalid Username
+user5 Test1234! - Invalid Username
+user6 Random@Password123 - Invalid Username
+user7 P@ssword!987 - Invalid Username
+user8 Hello1234@ - Invalid Username
+user9 StrongP@ssword1 - Invalid Username
+user10 Exciting!Password123 - Invalid Password
+user11 RandomUser456@ - Username already registered
+user12 SecurePass789! - Username already registered
+user13 TestingP@ss1 - Username already registered
+user14 CoolPassword!23 - Username already registered
+user15 1234Secret!Password - Username already registered
+user16 AwesomePass!987 - Username already registered
+user17 Hello12345@! - Username already registered
+user18 TestPass1!@3 - Username already registered
+user19 Password123!@ - Username already registered
+user20 Secure1234@Pass - Username already registered
+user21 ExcitingP@ss!23 - Username already registered
+user22 RandomPass456! - Username already registered
+user23 Testing!P@ss7 - Username already registered
+user24 Cool!Password89 - Username already registered
+user25 Secret1234@! - Username already registered
+user26 AwesomeP@ss!789 - Username already registered
+user27 HelloP@ss456 - Username already registered
+user28 Test1234@! - Invalid Password
+user29 Password!12345 - Username already registered
+user30 SecurePass!@789 - Username already registered
+user31 Exciting123@4 - Username already registered
+user32 RandomP@ss!567 - Username already registered
+user33 Testing!P@ss12 - Username already registered
+user34 CoolPass!345 - Username already registered
+user35 Secret@12345 - Username already registered
+user36 Awesome!Pass789 - Username already registered
+user37 Hello!123456 - Username already registered
+user38 TestP@ss123 - Username already registered
+user39 Password@567 - Username already registered
+user40 SecureP@ss!890 - Username already registered
+user41 Exciting1234! - Username already registered
+user42 Random@P@ss56 - Username already registered
+user43 TestingP@ss789 - Username already registered
+user44 CoolPass1!23 - Username already registered
+user45 Secret!123456 - Username already registered
+user46 AwesomeP@ss!90 - Username already registered
+user47 HelloP@ss!890 - Username already registered
+user48 Test1234@5 - Invalid Password
+user49 Password1!234 - Username already registered
+user50 SecurePass@678 - Username already registered
+user51 Exciting!12345 - Username already registered
+user52 RandomPass!456 - Username already registered
+user53 Testing@P@ss78 - Username already registered
+user54 Cool!Pass123 - Username already registered
+user55 Secret1234@! - Username already registered
+user56 AwesomeP@ss456 - Username already registered
+user57 HelloP@ss789 - Username already registered
+user58 TestP@ss!567 - Username already registered
+user59 Password!123456 - Username already registered
+user60 SecureP@ss!890 - Username already registered
+user61 Exciting!123456 - Username already registered
+user62 RandomP@ss!567 - Username already registered
+user63 Testing@P@ss78 - Username already registered
+user64 Cool!Pass123 - Username already registered
+user65 Secret1234@! - Username already registered
+user66 AwesomeP@ss456 - Username already registered
+user67 HelloP@ss789 - Username already registered
+user68 TestP@ss!567 - Username already registered
+user69 Password!123456 - Username already registered
+user70 SecureP@ss!890 - Username already registered
+user71 Exciting!12345 - Username already registered
+user72 Random@P - Invalid Password
