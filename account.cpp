@@ -1,7 +1,5 @@
 #include "account.h"
 
-#include <algorithm>
-
 bool isValidUsername(const std::string& username) {
     if (username.length() <= 5 || username.length() >= 10) {
         return false;

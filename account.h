@@ -1,10 +1,11 @@
 #pragma once
+#include <algorithm>
 #include <string>
 #include <vector>
 
 struct Account {
-    char username[9]{};
-    char password[19]{};
+    std::string username;
+    std::string password;
 };
 
 bool isValidUsername(const std::string& username);

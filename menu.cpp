@@ -1,8 +1,5 @@
 #include "menu.h"
 
-#include <fstream>
-#include <sstream>
-
 void signUpOneAccount(BloomFilter* username_check, BloomFilter* weak_password_check) {
     Account account;
 
@@ -89,8 +86,9 @@ void signUpAccount(const std::string& username, const std::string& password,
 void saveAccountToDatabase(BloomFilter* username_check, const std::string& username,
                            const std::string& password) {
     insertMember(username_check, username);
-    std::ofstream outFile("SignUp.txt", std::ios_base::app);
-    outFile << username << " " << password << std::endl;
+    std::ofstream outFile("data.txt", std::ios_base::app);
+    outFile << std::left << std::setw(9) << std::setfill(' ') << username << " " << std::setw(19)
+            << std::setfill(' ') << password << std::endl;
     outFile.close();
 }
 
@@ -147,7 +145,7 @@ void logIn(Account& account, bool& is_logged_in, BloomFilter* username_check) {
         }
 
         // Not sure that username is a member, continue to check
-        std::ifstream inp("SignUp.txt");
+        std::ifstream inp("data.txt");
         bool is_member = false;
         Account temp;
         while (inp >> temp.username >> temp.password) {
@@ -196,26 +194,21 @@ void changePassword(const std::string& username, BloomFilter* weak_password_chec
             continue;
         }
 
-        // Disk storage access
-        std::ifstream inp("SignUp.txt");
-        std::vector<Account> accounts;
+        // Disk storage access and replace the old password with the new one
+        std::fstream fst("data.txt");
         Account account;
 
-        while (inp >> account.username >> account.password) {
-            accounts.push_back(account);
-        }
-        inp.close();
-
-        // Replace the old password with the new one
-        std::ofstream out("SignUp.txt");
-        for (const auto& acc : accounts) {
-            if (acc.username == username) {
-                out << acc.username << " " << new_password << "\n";
+        while (fst >> account.username) {
+            if (account.username == username) {
+                fst.seekp(-10, std::ios::cur);
+                fst << std::left << std::setw(9) << std::setfill(' ') << username << " "
+                    << std::setw(19) << std::setfill(' ') << new_password << std::endl;
+                break;
             } else {
-                out << acc.username << " " << acc.password << "\n";
+                fst >> account.password;
             }
         }
-        out.close();
+        fst.close();
 
         std::cout << "Password changed successfully" << std::endl;
         loop_out = true;
